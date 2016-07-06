@@ -1,0 +1,20 @@
+
+ - src: mjanser.mysql
+
+ - src: mrwilson.sqlite
+
+ - src: https://github.com/xenlis-cl/cl_django
+   name: django
+
+ - src: https://github.com/xenlis-cl/cl_wordpress
+   name: wordpress
+
+ - src: https://github.com/xenlis-cl/cl_nginx
+   name: nginx
+
+
+ - src: https://github.com/xenlis-cl/cl_nginx
+   name: misc
+
+
+

@@ -1,0 +1,43 @@
+---
+
+php_timezone: America/Toronto
+php_default_char: 'UTF-8'
+
+
+#temporary hardcored! We'll use dynamic determent
+external_ip: '85.10.201.52'
+external_tcp_port: '1958'
+#may be we doesn't need it
+#for step 2 task
+moving_data: '0'
+
+#bad code in Ansible galaxy, it doesn't work! We must to comment it!
+#sqlite_dbs: ['wordpress', 'django']
+
+#workaround, to have working role
+sqlite_dbs: []
+
+
+django_home: '/usr/share/wordpress/'
+#temporary, becouse we haven't in this test server wordpress
+#django_home: '/home/django'
+
+
+#may be we doesn't need it
+wordpress_files_path: '/usr/share/wordpress/'
+#for step 2 task
+moving_data: '0'
+
+sqlite_dir: /var/lib/sqlite
+#bad code in Ansible galaxy, it doesn't work! We must to comment it!
+#sqlite_dbs: ['wordpress', 'django']
+
+#workaround, to have working role
+sqlite_dbs: []
+
+
+#mysql_root_pw: secret
+#wordpress_db_pw: secret
+
+include: vault_passwords.yml
+

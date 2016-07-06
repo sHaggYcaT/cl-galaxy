@@ -1,0 +1,4 @@
+[stadalone]
+85.10.201.52:1952 ansible_connection=ssh ansible_user=root
+
+

@@ -1,0 +1,41 @@
+---
+ - hosts: stadalone
+   become: true
+#   post_tasks:
+#
+#     - name: installation complete - create lock file. Needs to works Nginx playbook
+#       file: path=/root/wordpress_complete state=file
+
+   roles:
+# install some tools
+
+# role from ansible galaxy.
+#     - role: mjanser.mysql
+ #      mysql_root_password: {{ mysql_root_pw }}
+#       mysql_root_password: secret
+#       mysql_databases:
+#       - name: wordpress
+
+ #      mysql_users:
+ #      - name: wordpress
+#         password: {{ wordpress_db_password }}
+ #        password: secret
+ #        privileges: "wordpress.*:ALL"
+
+     - { role: mjanser.mysql, mysql_root_password: "{{ mysql_root_pw }}", mysql_databases: [{ name: wordpress }], mysql_users: [{ name: wordpress, password: "{{ wordpress_db_pw }}", privileges: "wordpress.*:ALL" }] }
+
+     - misc
+
+# role from ansible galaxy.
+     - mrwilson.sqlite
+# my role
+     - nginx
+# my role
+     - wordpress
+     - django
+
+   vars_files:
+     - defaults/main.yml
+     - defaults/vault_password.yml
+      
+
