@@ -23,3 +23,9 @@ fatal: [85.10.201.52]: FAILED! => {"failed": true, "msg": "The conditional check
 ####3 images by uwsgi server does not serve. It works, if you run the app using command: 
 python2.7 manage.py runserver 0.0.0.0:8000
 
+## TODO
+
+####1 complete playbook_move.yml - add promt input, and if/else case to switch to first or second server, andd lock file
+
+####2 fix bugs
+

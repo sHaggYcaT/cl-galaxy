@@ -1,4 +1,9 @@
 [stadalone]
 85.10.201.52:1952 ansible_connection=ssh ansible_user=root
 
+[server1]
+85.10.201.52:1952 ansible_connection=ssh ansible_user=root
+
+[server2]
+85.10.201.52:2294 ansible_connection=ssh ansible_user=root
 

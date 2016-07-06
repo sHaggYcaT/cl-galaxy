@@ -1,0 +1,34 @@
+---
+ - hosts: stadalone
+   become: true
+#   post_tasks:
+#
+#     - name: installation complete - create lock file. Needs to works Nginx playbook
+#       file: path=/root/wordpress_complete state=file
+
+
+     - name: mysqldump on the old server
+       #run_once
+       delegate_to: "{{  groups['server1'][1]  }}"
+       mysql_db: state=dump name="{{ mysql_old_db }}" target="{{ old_server_files_path }}/dump.sql"
+
+
+     - name: run rsync script new server
+       pause: prompt="Please login with ssh - ssh 'root@{{ groups['server1'][0] }}', and run command /usr/local/bin/wordpress_rsync.sh. Please note! ssh forwading on your workstation must be enabled! After command complete, Please press Enter key"
+
+
+     - name: import old database intoto new server
+       mysql_db: state=import name='wordpress' target="{{ new_server_files_path }}/dump.sql"
+       register: result
+
+     - name: clean old mysql dump
+       command: rm -f "{{ new_server_files_path }}/dump.sql"
+
+
+
+
+   vars_files:
+     - defaults/main.yml
+     - defaults/vault_password.yml
+      
+
