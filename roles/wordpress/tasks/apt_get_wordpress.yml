@@ -1,6 +1,0 @@
----
-
-- name: install wordpress 
-  apt:
-   name: wordpress
-
