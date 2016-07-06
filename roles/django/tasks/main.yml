@@ -1,0 +1,124 @@
+---
+
+- name: Install django deps
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    #for download sample app
+    - git-core
+    - nodejs-legacy
+    - npm
+    # deps
+    - python-pip
+    # pillow 3+ dependencies.
+    - python-dev
+    - python-setuptools
+    - libtiff5-dev
+    - libjpeg8-dev
+    - zlib1g-dev
+    - libfreetype6-dev
+    - liblcms2-dev
+    - libwebp-dev
+    - tcl8.6-dev
+    - tk8.6-dev
+    - python-tk
+
+- name: clean previous installation
+  command: "rm -rf {{ django_home }}/django"
+
+
+- name: add user django
+  user: name=django shell=/bin/bash home=/{{ django_home }}
+
+- name: install Django from pip
+  pip: name=Django version=1.9.7
+
+- name: Install wsgi
+  pip: name=uwsgi
+
+- name: Install application
+  git: repo=https://github.com/kevinastone/django-api-rest-and-angular dest={{ django_home }}/django/ force=yes
+
+- name: Fix ownership
+  file: dest={{ django_home }} owner=django group=django recurse=yes
+
+- name: install requirements of app
+  pip: requirements=/{{ django_home }}/django/requirements.txt
+
+- name: install node.js deps
+  npm:
+    name: "{{ item }}"
+    global: yes
+  with_items:
+    - grunt-cli
+    - bower
+
+- name: python setup.py develop
+  command: python setup.py develop
+  args:
+    chdir: "{{ django_home }}/django/"
+#  become_user: django
+
+- name: npm install under user
+  command: npm install
+  args:
+    chdir: "{{ django_home }}/django/"
+  become_user: django
+
+- name: bower install
+  command: bower install
+  args:
+    chdir: "{{ django_home }}/django/"
+  become_user: django
+
+- name: grunt
+  command: grunt
+  args:
+    chdir: "{{ django_home }}/django/"
+  become_user: django
+
+
+- name: database
+  command: make create_database
+  args:
+    chdir: "{{ django_home }}/django/"
+  become_user: django
+
+- name: second step of setupping database
+  command: make make_fixtures
+  args:
+    chdir: "{{ django_home }}/django/"
+  become_user: django
+
+
+- name: push uwsgi.conf
+  template:
+      src=uwsgi.conf.j2
+      dest=/etc/init/uwsgi.conf
+  notify:
+    - reload uwsgi
+
+- name: service uwsgi start
+  service: name=uwsgi state=started
+
+  #temporary for debug
+#- shell: python2.7 manage.py runserver 0.0.0.0:8000
+#  args:
+#    chdir: "{{ django_home }}/django-api-rest-and-angular/"
+#  become_user: django
+
+
+
+#for second part task
+#- name: wordpress rsync script install
+#  when: moving_data == '1'
+#  template:
+#      src=wordpress_rsync.sh.j2
+#      dest=/usr/local/bin/wordpress_rsync.sh
+
+
+#- name: setting up correct permitions to the script rsync
+#  when: moving_data == '1'
+#  file: path=/usr/local/bin/wordpress_rsync.sh mode=0755
+

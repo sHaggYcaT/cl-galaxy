@@ -1,0 +1,4 @@
+---
+# handlers file for lets-chat
+- name: "reload nginx"
+  service: name=nginx state=restarted

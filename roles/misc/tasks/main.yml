@@ -1,0 +1,29 @@
+---
+- name: Install nginx and php5-fpm
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - nginx
+    - php5-fpm
+
+#disable apache
+- service: name=apache2 state=stopped enabled=no
+
+#setting up nginx service
+- service: name=nginx state=started enabled=yes
+
+#setting up nginx service
+- service: name=php5-fpm state=started enabled=yes
+
+#we have other default host, and can't to use this! 
+- file: path=/etc/nginx/sites-enabled/default state=absent
+
+#push owncloud nginx config
+- name: owncloud nginx config
+  template:
+      src=wordpress.conf.j2
+      dest=/etc/nginx/conf.d/wordpress.conf
+  notify:
+    - reload nginx
+

@@ -1,0 +1,32 @@
+---
+#edit before commit!
+- include: apt_get_wordpress.yml
+
+#- include: modify_php_config.yml
+
+#for second part task
+- name: wordpress rsync script install
+  when: moving_data == '1'
+  template:
+      src=wordpress_rsync.sh.j2
+      dest=/usr/local/bin/wordpress_rsync.sh
+
+- name: wordpress install config
+  template:
+      src=config-vhost.php.j2
+      dest=/etc/wordpress/config-{{ external_ip }}.php
+  notify:
+    - Restart nginx
+
+
+
+- name: setting up correct permitions to the script rsync
+  when: moving_data == '1'
+  file: path=/usr/local/bin/wordpress_rsync.sh mode=0755
+
+#- name: Open link and setting up owncloud
+#   debug:
+#     msg: "Please open link 'http://{{ external_ip }}/' in your favorite webbrowser, and install wordpress"
+
+
+- pause: prompt="Please open link 'http://{{ external_ip }}:{{ external_tcp_port }}/' in your favorite webbrowser, and install wordpress. After complete, please press Enter key"
